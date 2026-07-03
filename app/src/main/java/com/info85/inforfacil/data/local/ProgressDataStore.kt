@@ -1,6 +1,7 @@
 package com.info85.inforfacil.data.local
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -30,6 +31,7 @@ class ProgressDataStore(private val context: Context) {
                 val type = object : TypeToken<ProgressModel>() {}.type
                 gson.fromJson(json, type) ?: ProgressModel()
             } catch (e: Exception) {
+                Log.e(TAG, "Erro ao desserializar progresso do DataStore", e)
                 ProgressModel()
             }
         }
@@ -52,6 +54,7 @@ class ProgressDataStore(private val context: Context) {
                     val type = object : TypeToken<ProgressModel>() {}.type
                     gson.fromJson(currentJson, type) ?: ProgressModel()
                 } catch (e: Exception) {
+                    Log.e(TAG, "Erro ao desserializar progresso ao atualizar módulo", e)
                     ProgressModel()
                 }
             }
@@ -80,6 +83,7 @@ class ProgressDataStore(private val context: Context) {
                     val type = object : TypeToken<ProgressModel>() {}.type
                     gson.fromJson(currentJson, type) ?: ProgressModel()
                 } catch (e: Exception) {
+                    Log.e(TAG, "Erro ao desserializar progresso ao atualizar configurações", e)
                     ProgressModel()
                 }
             }
@@ -92,5 +96,9 @@ class ProgressDataStore(private val context: Context) {
         context.dataStore.edit { preferences ->
             preferences.remove(Keys.PROGRESS_JSON)
         }
+    }
+
+    companion object {
+        private const val TAG = "ProgressDataStore"
     }
 }

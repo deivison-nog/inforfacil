@@ -10,6 +10,7 @@ import com.info85.inforfacil.models.ModuleItem
 import com.info85.inforfacil.ui.achievements.AchievementsActivity
 import com.info85.inforfacil.ui.glossary.GlossaryActivity
 import com.info85.inforfacil.ui.settings.SettingsActivity
+import com.info85.inforfacil.utils.showToast
 import com.info85.inforfacil.utils.toPercent
 
 class HomeActivity : AppCompatActivity() {
@@ -64,6 +65,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun onModuloClick(modulo: ModuleItem) {
-        // TODO: Navegar para o módulo específico
+        // TODO: Navegar para o módulo específico em versão futura
+        showToast("${modulo.nome} em desenvolvimento")
     }
 }

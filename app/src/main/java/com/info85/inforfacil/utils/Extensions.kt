@@ -10,7 +10,8 @@ fun Context.showToast(message: String) {
 fun Float.toPercent(): String = "${(this * 100).toInt()}%"
 
 fun Int.toStarsString(total: Int = 3): String {
-    val filled = "★".repeat(this)
-    val empty = "☆".repeat(total - this)
+    val clamped = this.coerceIn(0, total)
+    val filled = "★".repeat(clamped)
+    val empty = "☆".repeat(total - clamped)
     return filled + empty
 }
