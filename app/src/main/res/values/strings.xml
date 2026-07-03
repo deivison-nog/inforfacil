@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">InfoFácil</string>
+    <string name="glossary_title">Glossário</string>
+    <string name="achievements_title">Conquistas</string>
+    <string name="settings_title">Configurações</string>
+    <string name="label_modulos">Módulos de Aprendizado</string>
+
+    <!-- Placeholder messages -->
+    <string name="glossary_coming_soon">Glossário em breve! 📖</string>
+    <string name="achievements_coming_soon">Conquistas em breve! 🏆</string>
+    <string name="settings_coming_soon">Configurações em breve! ⚙️</string>
+
+    <!-- Content descriptions for accessibility -->
+    <string name="cd_progresso_geral">Barra de progresso geral do aplicativo</string>
+    <string name="cd_total_estrelas">Total de estrelas conquistadas</string>
+    <string name="cd_btn_glossario">Abrir Glossário</string>
+    <string name="cd_btn_conquistas">Abrir Conquistas</string>
+    <string name="cd_btn_configuracoes">Abrir Configurações</string>
+    <string name="cd_progresso_modulo">Progresso do módulo</string>
+</resources>
