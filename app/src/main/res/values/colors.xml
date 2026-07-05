@@ -24,8 +24,8 @@
 
     <!-- Alto Contraste -->
     <color name="contraste_primary">#FFFF00</color>
-    <color name="contraste_primary_dark">#CCCC00</color>
     <color name="contraste_dark">#CCCC00</color>
+    <color name="contraste_primary_dark">@color/contraste_dark</color>
     <color name="contraste_secondary">#00FFFF</color>
 
     <!-- Material theme colors -->
