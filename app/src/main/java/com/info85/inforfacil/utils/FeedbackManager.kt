@@ -1,6 +1,7 @@
 package com.info85.inforfacil.utils
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.VibrationEffect
@@ -26,11 +27,7 @@ class FeedbackManager(private val context: Context) {
 
     fun playSuccess() {
         if (prefs.somAtivado) {
-            try {
-                val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-                val ringtone = RingtoneManager.getRingtone(context, uri)
-                ringtone?.play()
-            } catch (_: Exception) {}
+            playSound("feedback_success", RingtoneManager.TYPE_NOTIFICATION)
         }
         if (prefs.vibracaoAtivada) {
             vibrate(longArrayOf(0, 80, 40, 80), false)
@@ -39,11 +36,7 @@ class FeedbackManager(private val context: Context) {
 
     fun playError() {
         if (prefs.somAtivado) {
-            try {
-                val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
-                val ringtone = RingtoneManager.getRingtone(context, uri)
-                ringtone?.play()
-            } catch (_: Exception) {}
+            playSound("feedback_error", RingtoneManager.TYPE_RINGTONE)
         }
         if (prefs.vibracaoAtivada) {
             vibrate(longArrayOf(0, 200, 100, 200), false)
@@ -52,15 +45,39 @@ class FeedbackManager(private val context: Context) {
 
     fun playModuleComplete() {
         if (prefs.somAtivado) {
-            try {
-                val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-                val ringtone = RingtoneManager.getRingtone(context, uri)
-                ringtone?.play()
-            } catch (_: Exception) {}
+            playSound("feedback_module_complete", RingtoneManager.TYPE_NOTIFICATION)
         }
         if (prefs.vibracaoAtivada) {
             vibrate(longArrayOf(0, 100, 50, 100, 50, 200), false)
         }
+    }
+
+    private fun playSound(resourceName: String, fallbackToneType: Int) {
+        try {
+            val rawResId = ResourceResolver.rawResIdByName(context, resourceName)
+            if (rawResId != null) {
+                MediaPlayer.create(context, rawResId)?.apply {
+                    setOnCompletionListener { player -> player.release() }
+                    setOnErrorListener { player, _, _ ->
+                        player.release()
+                        true
+                    }
+                    start()
+                } ?: playDefaultTone(fallbackToneType)
+            } else {
+                playDefaultTone(fallbackToneType)
+            }
+        } catch (_: Exception) {
+            playDefaultTone(fallbackToneType)
+        }
+    }
+
+    private fun playDefaultTone(toneType: Int) {
+        try {
+            val uri = RingtoneManager.getDefaultUri(toneType)
+            val ringtone = RingtoneManager.getRingtone(context, uri)
+            ringtone?.play()
+        } catch (_: Exception) {}
     }
 
     @Suppress("DEPRECATION")

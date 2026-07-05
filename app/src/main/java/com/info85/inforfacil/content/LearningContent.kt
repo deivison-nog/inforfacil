@@ -1,6 +1,7 @@
 package com.info85.inforfacil.content
 
 import com.info85.inforfacil.R
+import java.text.Normalizer
 
 enum class ActivityType {
     MULTIPLE_CHOICE,
@@ -11,7 +12,8 @@ enum class ActivityType {
 data class TopicItem(
     val title: String,
     val description: String,
-    val iconResId: Int
+    val iconResId: Int,
+    val imageResName: String = ""
 )
 
 data class PracticeActivityItem(
@@ -283,10 +285,26 @@ object LearningContentProvider {
         title: String,
         topics: List<TopicItem>,
         activities: List<PracticeActivityItem>
-    ) = ModuleContent(moduleId, title, topics, activities)
+    ) = ModuleContent(
+        moduleId = moduleId,
+        title = title,
+        topics = topics.mapIndexed { index, topic ->
+            topic.copy(imageResName = buildTopicImageResName(moduleId, index, topic.title))
+        },
+        activities = activities
+    )
 
     private fun topic(title: String, description: String, iconRes: Int) =
         TopicItem(title = title, description = description, iconResId = iconRes)
+
+    private fun buildTopicImageResName(moduleId: String, index: Int, title: String): String {
+        val slug = Normalizer.normalize(title.lowercase(), Normalizer.Form.NFD)
+            .replace("\\p{M}+".toRegex(), "")
+            .replace("[^a-z0-9]+".toRegex(), "_")
+            .trim('_')
+
+        return "learn_${moduleId}_${(index + 1).toString().padStart(2, '0')}_$slug"
+    }
 
     private fun mc(
         id: String,

@@ -16,9 +16,13 @@
 
         <ImageView
             android:id="@+id/ivTopicIcon"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:contentDescription="Ícone do tópico"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:adjustViewBounds="true"
+            android:background="@color/background_light"
+            android:contentDescription="Imagem do tópico"
+            android:padding="12dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_hardware" />
 
         <TextView
