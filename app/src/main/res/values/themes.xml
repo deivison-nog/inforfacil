@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Tema padrão: Azul -->
     <style name="Theme.InfoFacil" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/azul_principal</item>
         <item name="colorPrimaryVariant">@color/azul_escuro</item>
@@ -10,4 +11,55 @@
         <item name="android:statusBarColor">@color/azul_escuro</item>
         <item name="android:windowBackground">@color/background_light</item>
     </style>
+
+    <!-- Tema Verde -->
+    <style name="Theme.InfoFacil.Verde" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/tema_verde_primary</item>
+        <item name="colorPrimaryVariant">@color/tema_verde_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/azul_principal</item>
+        <item name="colorSecondaryVariant">@color/azul_escuro</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/tema_verde_dark</item>
+        <item name="android:windowBackground">@color/background_light</item>
+    </style>
+
+    <!-- Tema Roxo -->
+    <style name="Theme.InfoFacil.Roxo" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/tema_roxo_primary</item>
+        <item name="colorPrimaryVariant">@color/tema_roxo_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/laranja_estrela</item>
+        <item name="colorSecondaryVariant">@color/laranja_estrela</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/tema_roxo_dark</item>
+        <item name="android:windowBackground">@color/background_light</item>
+    </style>
+
+    <!-- Tema Laranja -->
+    <style name="Theme.InfoFacil.Laranja" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/tema_laranja_primary</item>
+        <item name="colorPrimaryVariant">@color/tema_laranja_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/azul_principal</item>
+        <item name="colorSecondaryVariant">@color/azul_escuro</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/tema_laranja_dark</item>
+        <item name="android:windowBackground">@color/background_light</item>
+    </style>
+
+    <!-- Tema Alto Contraste -->
+    <style name="Theme.InfoFacil.AltoContraste" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/contraste_primary</item>
+        <item name="colorPrimaryVariant">@color/contraste_primary_dark</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorSecondary">@color/contraste_secondary</item>
+        <item name="colorSecondaryVariant">@color/contraste_secondary</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:windowBackground">@color/black</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/contraste_secondary</item>
+    </style>
 </resources>
+

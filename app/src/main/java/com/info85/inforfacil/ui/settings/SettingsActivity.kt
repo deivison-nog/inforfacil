@@ -1,23 +1,32 @@
 package com.info85.inforfacil.ui.settings
 
+import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.info85.inforfacil.data.local.Configuracoes
 import com.info85.inforfacil.data.local.ProgressDataStore
 import com.info85.inforfacil.data.repository.ProgressRepository
 import com.info85.inforfacil.databinding.ActivitySettingsBinding
+import com.info85.inforfacil.ui.base.BaseActivity
+import com.info85.inforfacil.utils.ThemeHelper
 import com.info85.inforfacil.utils.showToast
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var repository: ProgressRepository
+
+    private val openDocumentLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        if (uri == null) return@registerForActivityResult
+        importFromUri(uri)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,8 +71,21 @@ class SettingsActivity : AppCompatActivity() {
                 )
 
                 repository.atualizarConfiguracoes(config)
-                applyDarkMode(config.modoEscuro)
+
+                // Sincroniza com AppPreferences para aplicação síncrona do tema
+                appPreferences.apply {
+                    tema = config.tema
+                    modoEscuro = config.modoEscuro
+                    altoContraste = config.altoContraste
+                    botoesGrandes = config.botoesGrandes
+                    tamanhoFonte = config.tamanhoFonte
+                    somAtivado = config.somAtivado
+                    vibracaoAtivada = config.vibracaoAtivada
+                }
+
+                ThemeHelper.applyDarkMode(config.modoEscuro)
                 showToast("Configurações salvas")
+                recreate()
             }
         }
 
@@ -83,16 +105,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.btnImportar.setOnClickListener {
-            lifecycleScope.launch {
-                val file = File(getExternalFilesDir(null), "inforfacil_progress.json")
-                if (!file.exists()) {
-                    showToast("Arquivo não encontrado para importação")
-                    return@launch
-                }
-                val ok = runCatching { repository.importarProgressoJson(file.readText()) }.getOrDefault(false)
-                showToast(if (ok) "Progresso importado com sucesso" else "Falha ao importar JSON")
-                if (ok) loadCurrentSettings()
-            }
+            openDocumentLauncher.launch(arrayOf("application/json", "text/plain", "*/*"))
         }
 
         binding.btnResetar.setOnClickListener {
@@ -119,11 +132,19 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun applyDarkMode(enabled: Boolean) {
-        AppCompatDelegate.setDefaultNightMode(
-            if (enabled) AppCompatDelegate.MODE_NIGHT_YES
-            else AppCompatDelegate.MODE_NIGHT_NO
-        )
+    private fun importFromUri(uri: Uri) {
+        lifecycleScope.launch {
+            runCatching {
+                contentResolver.openInputStream(uri)?.use { it.readBytes().toString(Charsets.UTF_8) }
+                    ?: throw IllegalStateException("Não foi possível ler o arquivo")
+            }.onSuccess { json ->
+                val ok = repository.importarProgressoJson(json)
+                showToast(if (ok) "Progresso importado com sucesso" else "Falha ao importar JSON")
+                if (ok) loadCurrentSettings()
+            }.onFailure {
+                showToast("Falha ao importar o arquivo")
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

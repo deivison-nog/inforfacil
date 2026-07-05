@@ -2,7 +2,6 @@ package com.info85.inforfacil.ui.glossary
 
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,10 +10,11 @@ import com.info85.inforfacil.content.GlossaryTerm
 import com.info85.inforfacil.data.local.ProgressDataStore
 import com.info85.inforfacil.data.repository.ProgressRepository
 import com.info85.inforfacil.databinding.ActivityGlossaryBinding
+import com.info85.inforfacil.ui.base.BaseActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class GlossaryActivity : AppCompatActivity() {
+class GlossaryActivity : BaseActivity() {
 
     private lateinit var binding: ActivityGlossaryBinding
     private lateinit var adapter: GlossaryAdapter
@@ -22,6 +22,7 @@ class GlossaryActivity : AppCompatActivity() {
 
     private val terms = GlossaryContent.terms()
     private var favorites = mutableSetOf<String>()
+    private var showOnlyFavorites = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +36,7 @@ class GlossaryActivity : AppCompatActivity() {
 
         setupRecycler()
         setupSearch()
+        setupFavoriteFilter()
         loadFavorites()
         filterList("")
     }
@@ -55,20 +57,30 @@ class GlossaryActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupFavoriteFilter() {
+        binding.btnFiltrarFavoritos.setOnClickListener {
+            showOnlyFavorites = !showOnlyFavorites
+            binding.btnFiltrarFavoritos.text = if (showOnlyFavorites) "Todos" else "★ Favoritos"
+            filterList(binding.etSearch.text?.toString().orEmpty())
+        }
+    }
+
     private fun loadFavorites() {
         lifecycleScope.launch {
             val progress = repository.progressComModulosDefault.first()
             favorites = progress.glossarioFavoritos.toMutableSet()
             adapter.setFavorites(favorites)
+            filterList(binding.etSearch.text?.toString().orEmpty())
         }
     }
 
     private fun filterList(query: String) {
         val normalized = query.trim().lowercase()
+        val source = if (showOnlyFavorites) terms.filter { favorites.contains(it.id) } else terms
         val filtered = if (normalized.isBlank()) {
-            terms
+            source
         } else {
-            terms.filter {
+            source.filter {
                 it.term.lowercase().contains(normalized) ||
                     it.definition.lowercase().contains(normalized)
             }
@@ -82,6 +94,7 @@ class GlossaryActivity : AppCompatActivity() {
             if (favorites.contains(term.id)) favorites.remove(term.id) else favorites.add(term.id)
             repository.atualizarFavoritosGlossario(favorites)
             adapter.setFavorites(favorites)
+            if (showOnlyFavorites) filterList(binding.etSearch.text?.toString().orEmpty())
         }
     }
 

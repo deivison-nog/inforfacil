@@ -1,17 +1,17 @@
 package com.info85.inforfacil.ui.achievements
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.info85.inforfacil.content.AchievementsContent
 import com.info85.inforfacil.data.local.ProgressDataStore
 import com.info85.inforfacil.data.repository.ProgressRepository
 import com.info85.inforfacil.databinding.ActivityAchievementsBinding
+import com.info85.inforfacil.ui.base.BaseActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class AchievementsActivity : AppCompatActivity() {
+class AchievementsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAchievementsBinding
     private lateinit var repository: ProgressRepository

@@ -39,8 +39,14 @@ class ProgressRepository(private val dataStore: ProgressDataStore) {
 
     suspend fun atualizarModulo(moduloId: String, moduloProgress: ModuloProgress) {
         val atual = progressComModulosDefault.first()
+        val anterior = atual.modulos[moduloId]
+
+        // Progressão de nível: sobe de nível a cada conclusão após o nível atual
+        val novoNivel = calcularNovoNivel(anterior, moduloProgress)
+        val progressoFinal = moduloProgress.copy(nivel = novoNivel)
+
         val atualizadoModulos = atual.modulos.toMutableMap().apply {
-            this[moduloId] = moduloProgress
+            this[moduloId] = progressoFinal
         }
 
         val hoje = currentDateString()
@@ -78,14 +84,31 @@ class ProgressRepository(private val dataStore: ProgressDataStore) {
 
     suspend fun importarProgressoJson(json: String): Boolean = dataStore.importProgressJson(json)
 
-    fun calcularPercentualGeral(modulos: Map<String, ModuloProgress>): Float {
-        if (modulos.isEmpty()) return 0f
-        return modulos.values.map { it.percentualConcluido }.average().toFloat()
+    /**
+     * Registra acesso diário do usuário atualizando o streak sem alterar progresso dos módulos.
+     */
+    suspend fun registrarAcessoDiario() {
+        val atual = progressComModulosDefault.first()
+        val hoje = currentDateString()
+        if (atual.ultimaAtividadeData == hoje) return
+        val novoStreak = calcularDiasConsecutivos(atual.ultimaAtividadeData, atual.diasConsecutivos, hoje)
+        val atualizado = atual.copy(diasConsecutivos = novoStreak, ultimaAtividadeData = hoje)
+        val comConquistas = atualizado.copy(conquistasDesbloqueadas = calcularConquistas(atualizado))
+        dataStore.saveProgress(comConquistas)
     }
 
-    fun calcularTotalEstrelas(modulos: Map<String, ModuloProgress>): Int {
-        return modulos.values.sumOf { it.estrelas }
-    }
+    fun calcularPercentualGeral(modulos: Map<String, ModuloProgress>): Float =
+        calcularPercentualGeralStatic(modulos)
+
+    fun calcularTotalEstrelas(modulos: Map<String, ModuloProgress>): Int =
+        calcularTotalEstrelasStatic(modulos)
+
+    /**
+     * Calcula o nível do módulo: sobe 1 nível por conclusão acima do nível 1.
+     * Nível máximo: 5.
+     */
+    fun calcularNovoNivel(anterior: ModuloProgress?, novo: ModuloProgress): Int =
+        calcularNovoNivelStatic(anterior, novo)
 
     private fun calcularConquistas(progress: ProgressModel): Map<String, String> {
         val desbloqueadas = progress.conquistasDesbloqueadas.toMutableMap()
@@ -132,31 +155,52 @@ class ProgressRepository(private val dataStore: ProgressDataStore) {
         ultimaData: String?,
         streakAtual: Int,
         hoje: String
-    ): Int {
-        if (ultimaData.isNullOrBlank()) return 1
-        if (ultimaData == hoje) return streakAtual.coerceAtLeast(1)
-
-        return try {
-            val ultima = synchronized(dateFormat) { dateFormat.parse(ultimaData) } ?: return 1
-            val hojeDate = synchronized(dateFormat) { dateFormat.parse(hoje) } ?: return 1
-
-            val calUltima = Calendar.getInstance().apply { time = ultima }
-            val calHoje = Calendar.getInstance().apply { time = hojeDate }
-
-            val diffMillis = calHoje.timeInMillis - calUltima.timeInMillis
-            val dias = (diffMillis / (1000 * 60 * 60 * 24)).toInt()
-
-            when (dias) {
-                0 -> streakAtual.coerceAtLeast(1)
-                1 -> streakAtual + 1
-                else -> 1
-            }
-        } catch (_: Exception) {
-            1
-        }
-    }
+    ): Int = calcularDiasConsecutivosStatic(ultimaData, streakAtual, hoje)
 
     companion object {
-        private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        internal val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        fun calcularTotalEstrelasStatic(modulos: Map<String, ModuloProgress>): Int =
+            modulos.values.sumOf { it.estrelas }
+
+        fun calcularPercentualGeralStatic(modulos: Map<String, ModuloProgress>): Float {
+            if (modulos.isEmpty()) return 0f
+            return modulos.values.map { it.percentualConcluido }.average().toFloat()
+        }
+
+        fun calcularNovoNivelStatic(anterior: ModuloProgress?, novo: ModuloProgress): Int {
+            if (!novo.concluido) return anterior?.nivel ?: 1
+            val nivelAtual = anterior?.nivel ?: 1
+            val jaConcluidoAntes = anterior?.concluido ?: false
+            return if (jaConcluidoAntes) (nivelAtual + 1).coerceAtMost(5) else nivelAtual
+        }
+
+        fun calcularDiasConsecutivosStatic(
+            ultimaData: String?,
+            streakAtual: Int,
+            hoje: String
+        ): Int {
+            if (ultimaData.isNullOrBlank()) return 1
+            if (ultimaData == hoje) return streakAtual.coerceAtLeast(1)
+
+            return try {
+                val ultima = synchronized(dateFormat) { dateFormat.parse(ultimaData) } ?: return 1
+                val hojeDate = synchronized(dateFormat) { dateFormat.parse(hoje) } ?: return 1
+
+                val calUltima = java.util.Calendar.getInstance().apply { time = ultima }
+                val calHoje = java.util.Calendar.getInstance().apply { time = hojeDate }
+
+                val diffMillis = calHoje.timeInMillis - calUltima.timeInMillis
+                val dias = (diffMillis / (1000 * 60 * 60 * 24)).toInt()
+
+                when (dias) {
+                    0 -> streakAtual.coerceAtLeast(1)
+                    1 -> streakAtual + 1
+                    else -> 1
+                }
+            } catch (_: Exception) {
+                1
+            }
+        }
     }
 }

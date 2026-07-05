@@ -3,17 +3,17 @@ package com.info85.inforfacil.ui.home
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.info85.inforfacil.databinding.ActivityHomeBinding
 import com.info85.inforfacil.models.ModuleItem
 import com.info85.inforfacil.ui.achievements.AchievementsActivity
+import com.info85.inforfacil.ui.base.BaseActivity
 import com.info85.inforfacil.ui.glossary.GlossaryActivity
 import com.info85.inforfacil.ui.module.ModuleDetailActivity
 import com.info85.inforfacil.ui.settings.SettingsActivity
 import com.info85.inforfacil.utils.toPercent
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private val viewModel: HomeViewModel by viewModels()

@@ -9,7 +9,6 @@ import android.view.DragEvent
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
@@ -21,16 +20,19 @@ import com.info85.inforfacil.data.local.ModuloProgress
 import com.info85.inforfacil.data.local.ProgressDataStore
 import com.info85.inforfacil.data.repository.ProgressRepository
 import com.info85.inforfacil.databinding.ActivityModuleDetailBinding
+import com.info85.inforfacil.ui.base.BaseActivity
+import com.info85.inforfacil.utils.FeedbackManager
 import com.info85.inforfacil.utils.applyFeedbackBounce
 import com.info85.inforfacil.utils.applyFeedbackShake
 import com.info85.inforfacil.utils.showToast
 import kotlinx.coroutines.launch
 
-class ModuleDetailActivity : AppCompatActivity() {
+class ModuleDetailActivity : BaseActivity() {
 
     private lateinit var binding: ActivityModuleDetailBinding
     private lateinit var moduleContent: ModuleContent
     private lateinit var repository: ProgressRepository
+    private lateinit var feedbackManager: FeedbackManager
 
     private var selectedOption: String? = null
     private var currentIndex = 0
@@ -51,6 +53,7 @@ class ModuleDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         repository = ProgressRepository(ProgressDataStore(applicationContext))
+        feedbackManager = FeedbackManager(this)
         val moduleId = intent.getStringExtra(EXTRA_MODULE_ID).orEmpty()
         moduleContent = LearningContentProvider.getModuleContent(moduleId)
 
@@ -250,10 +253,12 @@ class ModuleDetailActivity : AppCompatActivity() {
 
         if (isCorrect) {
             correctAnswers += 1
+            feedbackManager.playSuccess()
             showFeedback(true, "Correto! Muito bem!")
             binding.btnCheckPractice.text = getString(com.info85.inforfacil.R.string.next_activity)
             currentChecked = true
         } else {
+            feedbackManager.playError()
             showFeedback(false, "Ops! Tente novamente. Dica: ${activity.hint}")
             currentChecked = false
         }
@@ -303,6 +308,7 @@ class ModuleDetailActivity : AppCompatActivity() {
                 percentualConcluido = percentual
             )
             repository.atualizarModulo(moduleContent.moduleId, progress)
+            feedbackManager.playModuleComplete()
             showToast("Parabéns! Módulo concluído!")
         }
 

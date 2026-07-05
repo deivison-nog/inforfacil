@@ -10,6 +10,23 @@
     <color name="azul_escuro">#1565C0</color>
     <color name="verde_escuro">#2E7D32</color>
 
+    <!-- Tema Verde -->
+    <color name="tema_verde_primary">#388E3C</color>
+    <color name="tema_verde_dark">#1B5E20</color>
+
+    <!-- Tema Roxo -->
+    <color name="tema_roxo_primary">#7B1FA2</color>
+    <color name="tema_roxo_dark">#4A148C</color>
+
+    <!-- Tema Laranja -->
+    <color name="tema_laranja_primary">#E65100</color>
+    <color name="tema_laranja_dark">#BF360C</color>
+
+    <!-- Alto Contraste -->
+    <color name="contraste_primary">#FFFF00</color>
+    <color name="contraste_primary_dark">#CCCC00</color>
+    <color name="contraste_secondary">#00FFFF</color>
+
     <!-- Material theme colors -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
@@ -18,3 +35,4 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
 </resources>
+
