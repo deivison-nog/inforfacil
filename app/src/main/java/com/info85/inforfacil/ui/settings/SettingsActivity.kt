@@ -135,14 +135,18 @@ class SettingsActivity : BaseActivity() {
     private fun importFromUri(uri: Uri) {
         lifecycleScope.launch {
             runCatching {
-                contentResolver.openInputStream(uri)?.use { it.readBytes().toString(Charsets.UTF_8) }
-                    ?: throw IllegalStateException("Não foi possível ler o arquivo")
+                contentResolver.openInputStream(uri)?.use { stream ->
+                    val maxBytes = 5 * 1024 * 1024 // 5 MB limit
+                    val bytes = stream.readBytes()
+                    if (bytes.size > maxBytes) throw IllegalStateException("Arquivo muito grande (máx. 5 MB)")
+                    bytes.toString(Charsets.UTF_8)
+                } ?: throw IllegalStateException("Não foi possível ler o arquivo")
             }.onSuccess { json ->
                 val ok = repository.importarProgressoJson(json)
                 showToast(if (ok) "Progresso importado com sucesso" else "Falha ao importar JSON")
                 if (ok) loadCurrentSettings()
-            }.onFailure {
-                showToast("Falha ao importar o arquivo")
+            }.onFailure { e ->
+                showToast(e.message ?: "Falha ao importar o arquivo")
             }
         }
     }

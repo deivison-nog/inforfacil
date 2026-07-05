@@ -36,7 +36,8 @@ data class ModuleContent(
 object LearningContentProvider {
 
     fun getModuleContent(moduleId: String): ModuleContent {
-        return allModules()[moduleId] ?: allModules().getValue("hardware")
+        val modules = allModules()
+        return modules[moduleId] ?: modules.getValue("hardware")
     }
 
     fun allModules(): Map<String, ModuleContent> = mapOf(

@@ -60,7 +60,9 @@ class GlossaryActivity : BaseActivity() {
     private fun setupFavoriteFilter() {
         binding.btnFiltrarFavoritos.setOnClickListener {
             showOnlyFavorites = !showOnlyFavorites
-            binding.btnFiltrarFavoritos.text = if (showOnlyFavorites) "Todos" else "★ Favoritos"
+            val btnText = if (showOnlyFavorites) "Todos" else "★ Favoritos"
+            binding.btnFiltrarFavoritos.text = btnText
+            binding.btnFiltrarFavoritos.contentDescription = btnText
             filterList(binding.etSearch.text?.toString().orEmpty())
         }
     }
