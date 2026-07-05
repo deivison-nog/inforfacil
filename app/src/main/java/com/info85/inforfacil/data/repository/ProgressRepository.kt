@@ -124,7 +124,7 @@ class ProgressRepository(private val dataStore: ProgressDataStore) {
     }
 
     private fun currentDateString(): String =
-        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        dateFormat.format(Date())
 
     private fun calcularDiasConsecutivos(
         ultimaData: String?,
@@ -134,10 +134,9 @@ class ProgressRepository(private val dataStore: ProgressDataStore) {
         if (ultimaData.isNullOrBlank()) return 1
         if (ultimaData == hoje) return streakAtual.coerceAtLeast(1)
 
-        val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return try {
-            val ultima = format.parse(ultimaData) ?: return 1
-            val hojeDate = format.parse(hoje) ?: return 1
+            val ultima = dateFormat.parse(ultimaData) ?: return 1
+            val hojeDate = dateFormat.parse(hoje) ?: return 1
 
             val calUltima = Calendar.getInstance().apply { time = ultima }
             val calHoje = Calendar.getInstance().apply { time = hojeDate }
@@ -153,5 +152,9 @@ class ProgressRepository(private val dataStore: ProgressDataStore) {
         } catch (_: Exception) {
             1
         }
+    }
+
+    companion object {
+        private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     }
 }

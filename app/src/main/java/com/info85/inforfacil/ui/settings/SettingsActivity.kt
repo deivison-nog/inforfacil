@@ -69,10 +69,16 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.btnExportar.setOnClickListener {
             lifecycleScope.launch {
-                val json = repository.exportarProgressoJson()
-                val file = File(getExternalFilesDir(null), "inforfacil_progress.json")
-                file.writeText(json)
-                showToast("Exportado para: ${file.absolutePath}")
+                runCatching {
+                    val json = repository.exportarProgressoJson()
+                    val file = File(getExternalFilesDir(null), "inforfacil_progress.json")
+                    file.writeText(json)
+                    file.absolutePath
+                }.onSuccess { path ->
+                    showToast("Exportado para: $path")
+                }.onFailure {
+                    showToast("Falha ao exportar o progresso")
+                }
             }
         }
 
@@ -83,7 +89,7 @@ class SettingsActivity : AppCompatActivity() {
                     showToast("Arquivo não encontrado para importação")
                     return@launch
                 }
-                val ok = repository.importarProgressoJson(file.readText())
+                val ok = runCatching { repository.importarProgressoJson(file.readText()) }.getOrDefault(false)
                 showToast(if (ok) "Progresso importado com sucesso" else "Falha ao importar JSON")
                 if (ok) loadCurrentSettings()
             }

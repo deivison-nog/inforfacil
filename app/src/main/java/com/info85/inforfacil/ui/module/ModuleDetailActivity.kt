@@ -1,5 +1,7 @@
 package com.info85.inforfacil.ui.module
 
+import android.content.ClipData
+import android.content.ClipDescription
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -8,7 +10,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.children
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
@@ -201,8 +202,12 @@ class ModuleDetailActivity : AppCompatActivity() {
                 setStroke(2, Color.parseColor("#2196F3"))
             }
             setOnLongClickListener { view ->
+                val clipData = ClipData(
+                    ClipDescription("drag_item", arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)),
+                    ClipData.Item(text)
+                )
                 val shadow = View.DragShadowBuilder(view)
-                view.startDragAndDrop(null, shadow, text, 0)
+                view.startDragAndDrop(clipData, shadow, text, 0)
                 true
             }
         }
