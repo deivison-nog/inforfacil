@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">InfoFácil</string>
+    <string name="glossary_title">Glossário</string>
+    <string name="achievements_title">Conquistas</string>
+    <string name="settings_title">Configurações</string>
+    <string name="module_detail_title">Módulo</string>
+    <string name="label_modulos">Módulos de Aprendizado</string>
+    <string name="check_answer">Verificar</string>
+    <string name="next_activity">Próxima atividade</string>
+
+    <string name="glossary_coming_soon">Glossário em breve! 📖</string>
+    <string name="achievements_coming_soon">Conquistas em breve! 🏆</string>
+    <string name="settings_coming_soon">Configurações em breve! ⚙️</string>
+
+    <string name="cd_progresso_geral">Barra de progresso geral do aplicativo</string>
+    <string name="cd_total_estrelas">Total de estrelas conquistadas</string>
+    <string name="cd_btn_glossario">Abrir Glossário</string>
+    <string name="cd_btn_conquistas">Abrir Conquistas</string>
+    <string name="cd_btn_configuracoes">Abrir Configurações</string>
+    <string name="cd_progresso_modulo">Progresso do módulo</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_titulo">Bem-vindo(a) ao InfoFácil!</string>
+    <string name="onboarding_subtitulo">Aprenda informática de forma fácil e divertida.</string>
+    <string name="onboarding_hint_nome">Como você quer ser chamado(a)?</string>
+    <string name="onboarding_btn_comecar">Começar</string>
+
+    <!-- Notificações -->
+    <string name="notif_channel_name">Lembretes de Estudo</string>
+    <string name="notif_channel_desc">Lembretes diários para manter sua sequência de estudos.</string>
+    <string name="notif_reminder_title">InfoFácil 📚</string>
+    <string name="notif_reminder_body">Que tal estudar um pouquinho hoje? Mantenha sua sequência!</string>
+</resources>
+
