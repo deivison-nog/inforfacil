@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.info85.inforfacil.utils.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -107,15 +108,42 @@ class ProgressDataStore(private val context: Context) {
     suspend fun importProgressJson(json: String): Boolean {
         return try {
             val type = object : TypeToken<ProgressModel>() {}.type
-            gson.fromJson<ProgressModel>(json, type)
+            val imported = gson.fromJson<ProgressModel>(json, type) ?: return false
+            val sanitized = sanitizeProgress(imported)
             context.dataStore.edit { preferences ->
-                preferences[Keys.PROGRESS_JSON] = json
+                preferences[Keys.PROGRESS_JSON] = gson.toJson(sanitized)
             }
             true
         } catch (e: Exception) {
             Log.e(TAG, "Erro ao importar progresso JSON", e)
             false
         }
+    }
+
+    private fun sanitizeProgress(progress: ProgressModel): ProgressModel {
+        val sanitizedModules = Constants.MODULE_IDS.associateWith { moduleId ->
+            val modulo = progress.modulos[moduleId] ?: ModuloProgress(moduloId = moduleId)
+            modulo.copy(
+                moduloId = moduleId,
+                nivel = modulo.nivel.coerceAtLeast(1),
+                estrelas = modulo.estrelas.coerceIn(0, 3),
+                percentualConcluido = modulo.percentualConcluido.coerceIn(0f, 1f)
+            )
+        }
+
+        val sanitizedFavoritos = progress.glossarioFavoritos.filter { it.isNotBlank() }.toSet()
+        val sanitizedConquistas = progress.conquistasDesbloqueadas.filterKeys { it.isNotBlank() }
+        val totalEstrelas = sanitizedModules.values.sumOf { it.estrelas }
+        val percentualGeral = if (sanitizedModules.isEmpty()) 0f else sanitizedModules.values.map { it.percentualConcluido }.average().toFloat()
+
+        return progress.copy(
+            modulos = sanitizedModules,
+            totalEstrelas = totalEstrelas,
+            percentualGeral = percentualGeral,
+            glossarioFavoritos = sanitizedFavoritos,
+            conquistasDesbloqueadas = sanitizedConquistas,
+            diasConsecutivos = progress.diasConsecutivos.coerceAtLeast(0)
+        )
     }
 
     companion object {
