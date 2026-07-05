@@ -1,19 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/background_light">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="48dp"
-        android:text="@string/settings_coming_soon"
-        android:textSize="18sp"
-        android:textColor="@color/texto_principal"
-        android:padding="16dp" />
+        android:orientation="vertical"
+        android:padding="16dp">
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Perfil"
+            android:textStyle="bold"
+            android:textColor="@color/texto_principal" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNomeUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nome do usuário"
+                android:minHeight="48dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Aparência"
+            android:textStyle="bold"
+            android:textColor="@color/texto_principal" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchModoEscuro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:minHeight="48dp"
+            android:text="Modo Escuro" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+            <AutoCompleteTextView
+                android:id="@+id/spinnerTema"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tema (azul/verde/roxo/laranja)"
+                android:inputType="none"
+                android:minHeight="48dp"
+                android:text="azul" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Acessibilidade"
+            android:textStyle="bold"
+            android:textColor="@color/texto_principal" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+            <AutoCompleteTextView
+                android:id="@+id/spinnerFonte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tamanho da fonte (pequeno/medio/grande)"
+                android:inputType="none"
+                android:minHeight="48dp"
+                android:text="medio" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchAltoContraste"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:minHeight="48dp"
+            android:text="Alto Contraste" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchBotoesGrandes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Botões Grandes" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchSom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Som" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchVibracao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Vibração" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Dados"
+            android:textStyle="bold"
+            android:textColor="@color/texto_principal" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSalvarConfiguracoes"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:minHeight="48dp"
+            android:text="Salvar configurações"
+            app:backgroundTint="@color/azul_principal" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnExportar"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:minHeight="48dp"
+            android:text="Exportar progresso (JSON)" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnImportar"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:minHeight="48dp"
+            android:text="Importar progresso (JSON)" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnResetar"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:minHeight="48dp"
+            android:text="Resetar progresso"
+            android:textColor="#B00020" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSobre"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:minHeight="48dp"
+            android:text="Sobre" />
+
+    </LinearLayout>
+
+</ScrollView>

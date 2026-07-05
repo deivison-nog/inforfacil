@@ -13,7 +13,11 @@ data class Configuracoes(
     val nomeUsuario: String = "Estudante",
     val somAtivado: Boolean = true,
     val vibracaoAtivada: Boolean = true,
-    val tamanhoFonte: String = "normal"
+    val tamanhoFonte: String = "medio",
+    val modoEscuro: Boolean = false,
+    val tema: String = "azul",
+    val altoContraste: Boolean = false,
+    val botoesGrandes: Boolean = true
 )
 
 data class ProgressModel(
@@ -21,5 +25,9 @@ data class ProgressModel(
     val totalEstrelas: Int = 0,
     val percentualGeral: Float = 0f,
     val configuracoes: Configuracoes = Configuracoes(),
-    val versao: Int = 1
+    val conquistasDesbloqueadas: Map<String, String> = emptyMap(),
+    val glossarioFavoritos: Set<String> = emptySet(),
+    val diasConsecutivos: Int = 0,
+    val ultimaAtividadeData: String? = null,
+    val versao: Int = 2
 )

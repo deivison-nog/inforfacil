@@ -10,6 +10,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "inforfacil_progress")
@@ -95,6 +96,25 @@ class ProgressDataStore(private val context: Context) {
     suspend fun clearProgress() {
         context.dataStore.edit { preferences ->
             preferences.remove(Keys.PROGRESS_JSON)
+        }
+    }
+
+    suspend fun exportProgressJson(): String {
+        val preferences = context.dataStore.data.first()
+        return preferences[Keys.PROGRESS_JSON] ?: gson.toJson(ProgressModel())
+    }
+
+    suspend fun importProgressJson(json: String): Boolean {
+        return try {
+            val type = object : TypeToken<ProgressModel>() {}.type
+            gson.fromJson<ProgressModel>(json, type)
+            context.dataStore.edit { preferences ->
+                preferences[Keys.PROGRESS_JSON] = json
+            }
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Erro ao importar progresso JSON", e)
+            false
         }
     }
 

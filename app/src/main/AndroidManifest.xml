@@ -11,13 +11,26 @@
 
         <activity
             android:name=".ui.home.HomeActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/app_name">
+        </activity>
+
+        <activity
+            android:name=".ui.splash.SplashActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.InfoFacil">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.module.ModuleDetailActivity"
+            android:exported="false"
+            android:label="@string/module_detail_title"
+            android:parentActivityName=".ui.home.HomeActivity" />
 
         <activity
             android:name=".ui.glossary.GlossaryActivity"

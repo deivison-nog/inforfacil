@@ -4,14 +4,15 @@
     <string name="glossary_title">Glossário</string>
     <string name="achievements_title">Conquistas</string>
     <string name="settings_title">Configurações</string>
+    <string name="module_detail_title">Módulo</string>
     <string name="label_modulos">Módulos de Aprendizado</string>
+    <string name="check_answer">Verificar</string>
+    <string name="next_activity">Próxima atividade</string>
 
-    <!-- Placeholder messages -->
     <string name="glossary_coming_soon">Glossário em breve! 📖</string>
     <string name="achievements_coming_soon">Conquistas em breve! 🏆</string>
     <string name="settings_coming_soon">Configurações em breve! ⚙️</string>
 
-    <!-- Content descriptions for accessibility -->
     <string name="cd_progresso_geral">Barra de progresso geral do aplicativo</string>
     <string name="cd_total_estrelas">Total de estrelas conquistadas</string>
     <string name="cd_btn_glossario">Abrir Glossário</string>
